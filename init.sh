@@ -1,26 +1,26 @@
 #!/bin/sh
 
 echo "Initializing structure..."
-mkdir ./assets
-mkdir ./assets/images
-mkdir ./assets/css
-mkdir ./assets/js
-mkdir ./assets/js/vendor
+mkdir ./app
+mkdir ./app/img
+mkdir ./app/css
+mkdir ./app/js
+mkdir ./app/js/vendor
 
 echo "Copying files..."
 cp ./template/.editorconfig ./.editorconfig
 cp ./template/.gitignore ./.gitignore
 cp ./template/.jshintrc ./.jshintrc
 cp ./template/Gruntfile.js ./Gruntfile.js
-cp ./template/humans.txt ./humans.txt
-cp ./template/index.html ./index.html
+cp ./template/app/humans.txt ./app/humans.txt
+cp ./template/app/index.html ./app/index.html
 cp ./template/package.json ./package.json
-cp ./template/robots.txt ./robots.txt
-cp ./template/assets/css/style.css ./assets/css/style.css
-cp ./template/assets/css/normalize.css ./assets/css/normalize.css
-cp ./template/assets/js/main.js ./assets/js/main.js
-cp ./template/assets/js/vendor/jquery-1.10.2.min.js ./assets/js/vendor/jquery-1.10.2.min.js
-cp ./template/assets/js/vendor/modernizr-2.6.2.min.js ./assets/js/vendor/modernizr-2.6.2.min.js
+cp ./template/app/robots.txt ./app/robots.txt
+cp ./template/app/css/style.css ./app/css/style.css
+cp ./template/app/css/normalize.css ./app/css/normalize.css
+cp ./template/app/js/main.js ./app/js/main.js
+cp ./template/app/js/vendor/jquery-1.10.2.min.js ./app/js/vendor/jquery-1.10.2.min.js
+cp ./template/app/js/vendor/modernizr-2.6.2.min.js ./app/js/vendor/modernizr-2.6.2.min.js
 
 echo "Removing stuff you don't want..."
 rm -rf .git
