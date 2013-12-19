@@ -31,6 +31,19 @@ module.exports = function(grunt) {
         ' */\n' +
         '\n',
 
+        clean: {
+            dist: {
+                files: [{
+                    dot: true,
+                    src: [
+                        '.tmp',
+                        '<%= dist %>/*'
+                    ]
+                }]
+            },
+            server: '.tmp'
+        },
+
         // Start Server
         connect: {
             server: {
@@ -45,66 +58,6 @@ module.exports = function(grunt) {
                         ];
                     }
                 }
-            }
-        },
-
-        // Watch Task
-        watch: {
-            options: {
-                livereload: true
-            },
-            css: {
-                files: '<%= app %>/css/{,*/}*.css',
-                tasks: 'copy:styles'
-            },
-            js: {
-                files: '<%= jshint.all %>',
-                tasks: 'jshint'
-            },
-            html: {
-                files: '<%= app %>/*.html'
-            }
-        },
-
-        // CSS Minify options
-        cssmin: {
-          options:{
-            keepSpecialComments: 0
-          }
-        },
-
-        // JS Linting
-        jshint: {
-            options: {
-                jshintrc: '.jshintrc',
-                ignores: '<%= app %>/js/vendor/*'
-            },
-            all: [
-                'Gruntfile.js',
-                '<%= app %>/js/{,*/}*.js'
-            ]
-        },
-
-        // JS Minify options
-        uglify: {
-            options: {
-                mangle: false,
-                banner: '<%= banner %>'
-            }
-        },
-
-        useminPrepare: {
-            html: '<%= app %>/index.html',
-            options: {
-                dest: '<%= dist %>'
-            }
-        },
-
-        usemin: {
-            html: ['<%= dist %>/index.html'],
-            css: ['<%= dist %>/css/{,*/}*.css'],
-            options: {
-                dirs: ['<%= dist %>']
             }
         },
 
@@ -130,18 +83,67 @@ module.exports = function(grunt) {
             },
         },
 
-        clean: {
-            dist: {
-                files: [{
-                    dot: true,
-                    src: [
-                        '.tmp',
-                        '<%= dist %>/*'
-                    ]
-                }]
-            },
-            server: '.tmp'
+        // CSS Minify options
+        cssmin: {
+          options:{
+            keepSpecialComments: 0
+          }
         },
+
+        // JS Linting
+        jshint: {
+            options: {
+                jshintrc: '.jshintrc',
+                ignores: '<%= app %>/js/vendor/*'
+            },
+            all: [
+                'Gruntfile.js',
+                '<%= app %>/js/{,*/}*.js'
+            ]
+        },
+
+
+
+        // JS Minify options
+        uglify: {
+            options: {
+                mangle: false,
+                banner: '<%= banner %>'
+            }
+        },
+
+        useminPrepare: {
+            html: '<%= app %>/index.html',
+            options: {
+                dest: '<%= dist %>'
+            }
+        },
+
+        usemin: {
+            html: ['<%= dist %>/index.html'],
+            css: ['<%= dist %>/css/{,*/}*.css'],
+            options: {
+                dirs: ['<%= dist %>']
+            }
+        },
+
+        // Watch Task
+        watch: {
+            options: {
+                livereload: true
+            },
+            css: {
+                files: '<%= app %>/css/{,*/}*.css',
+                tasks: 'copy:styles'
+            },
+            js: {
+                files: '<%= jshint.all %>',
+                tasks: 'jshint'
+            },
+            html: {
+                files: '<%= app %>/*.html'
+            }
+        }
 
     };
 
