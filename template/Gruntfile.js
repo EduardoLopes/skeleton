@@ -13,11 +13,8 @@ module.exports = function(grunt) {
     // --------------------------
     var appConfig = {
 
-        // Dirs
-        dirs: {
-            js:   'assets/js',
-            css:  'assets/css'
-        },
+        app:   'app',
+        dist:  'dist',
 
         // Metadata
         pkg: grunt.file.readJSON('package.json'),
@@ -39,10 +36,14 @@ module.exports = function(grunt) {
             server: {
                 options: {
                     port: 9000,
-                    base: '.',
                     hostname: 'localhost',
                     livereload: true,
-                    open: true
+                    middleware: function (connect) {
+                        return [
+                            connect.static(require('path').resolve( '.tmp' )),
+                            connect.static(require('path').resolve( appConfig.app ))
+                        ];
+                    }
                 }
             }
         },
@@ -52,47 +53,95 @@ module.exports = function(grunt) {
             options: {
                 livereload: true
             },
+            css: {
+                files: '<%= app %>/css/{,*/}*.css',
+                tasks: 'copy:styles'
+            },
             js: {
                 files: '<%= jshint.all %>',
                 tasks: 'jshint'
             },
             html: {
-                files: '*.html'
+                files: '<%= app %>/*.html'
             }
         },
 
-        // CSS Minify
+        // CSS Minify options
         cssmin: {
-            dist: {
-                files: {
-                    '<%= dirs.css %>/style.min.css': [ '<%= dirs.css %>/normalize.css', '<%= dirs.css %>/style.css' ]
-                }
-            }
+          options:{
+            keepSpecialComments: 0
+          }
         },
 
         // JS Linting
         jshint: {
             options: {
-                jshintrc: '.jshintrc'
+                jshintrc: '.jshintrc',
+                ignores: '<%= app %>/js/vendor/*'
             },
             all: [
                 'Gruntfile.js',
-                '<%= dirs.js %>/main.js'
+                '<%= app %>/js/{,*/}*.js'
             ]
         },
 
-        // JS Concat and Minify
+        // JS Minify options
         uglify: {
             options: {
                 mangle: false,
                 banner: '<%= banner %>'
+            }
+        },
+
+        useminPrepare: {
+            html: '<%= app %>/index.html',
+            options: {
+                dest: '<%= dist %>'
+            }
+        },
+
+        usemin: {
+            html: ['<%= dist %>/index.html'],
+            css: ['<%= dist %>/css/{,*/}*.css'],
+            options: {
+                dirs: ['<%= dist %>']
+            }
+        },
+
+        copy:{
+            styles: {
+                expand: true,
+                cwd: '<%= app %>/css',
+                dest: '.tmp/',
+                src: '{,*/}*.css'
             },
             dist: {
-                files: {
-                    '<%= dirs.js %>/main.min.js': [ '<%= dirs.js %>/main.js' ]
-                }
-            }
-        }
+                files: [{
+                    expand: true,
+                    cwd: '<%= app %>',
+                    dest: '<%= dist %>',
+                    src: [
+                        '*.{ico,png,txt}',
+                        'js/vendor/{,*/}*.js',
+                        'img/*',
+                        '*.html'
+                    ]
+                }]
+            },
+        },
+
+        clean: {
+            dist: {
+                files: [{
+                    dot: true,
+                    src: [
+                        '.tmp',
+                        '<%= dist %>/*'
+                    ]
+                }]
+            },
+            server: '.tmp'
+        },
 
     };
 
@@ -101,7 +150,27 @@ module.exports = function(grunt) {
 
     // Register tasks
     // --------------------------
-    grunt.registerTask( 'default', [ 'connect', 'watch' ]);
-    grunt.registerTask( 'build', [ 'jshint', 'uglify', 'cssmin' ]);
+    grunt.registerTask( 'default', [
+        'jshint',
+        'build'
+    ]);
+
+    grunt.registerTask( 'build', [
+        'clean:dist',
+        'useminPrepare',
+        'concat',
+        'jshint',
+        'uglify',
+        'cssmin',
+        'copy:dist',
+        'usemin'
+    ]);
+
+    grunt.registerTask( 'server', [
+        'clean:server',
+        'copy:styles',
+        'connect',
+        'watch'
+    ]);
 
 };
